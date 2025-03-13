@@ -1,0 +1,40 @@
+import { Page, Locator } from '@playwright/test';
+import { TIMEOUT } from 'dns';
+
+export class HomePage {
+  readonly page: Page;
+  readonly banner: Locator;
+  readonly careersButton: Locator;
+  readonly logo: Locator;
+  readonly searchButton: Locator;
+  readonly contactUsButton: Locator;
+  readonly openMenuButton: Locator;
+  readonly menuNavigation: Locator;
+  readonly cookieBanner!: Locator;
+  readonly cookieAcceptAllButton!: Locator;
+  readonly menuItems: Locator;
+
+  constructor(page: Page) {
+    this.page            = page;
+    this.logo            = page.locator('#app > div.layout > header > div > a > img');
+    this.banner          = page.getByText('For The FutureWe are advisors');
+    this.careersButton   = page.getByRole('link',{ name: 'Careers open'});
+    this.searchButton    = page.locator('#menu').getByRole('link', { name: 'Search' });
+    this.contactUsButton = page.getByRole('button', { name: 'Contact us' });
+    this.openMenuButton  = page.getByRole('button', { name: 'Open menu' });
+    this.menuNavigation  = page.getByText('HomeYour Digital')
+    this.menuItems       = this.menuNavigation.locator('li');
+  }
+
+  async navigate() {
+    await this.page.goto('https://www.softserveinc.com/');
+    await this.page.waitForLoadState();
+    await this.page.waitForTimeout(10000);
+    try{
+    await this.cookieBanner.getByText('Let’s talk about cookies We').waitFor({state: 'visible', timeout: 3000});
+    await this.cookieAcceptAllButton.getByRole('button', { name: 'Accept All' }).click();
+    } catch (error){
+        console.log('Cookie dialog not found, continuing without accepting.')
+    }
+  }
+}
