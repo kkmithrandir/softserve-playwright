@@ -25,7 +25,7 @@ test.describe('Careers Page Tests', () => {
     await expect(newCareersPage.careersHeadingSubText).toHaveText('Find your perfect IT job at SoftServe');
   });
 
-  test.only('user uses the search functionality', async () => {
+  test('user uses the search functionality', async () => {
     // Navigate to the Careers page and get the new tab
     newTab = await careersPage.navigateToCareersPage();
     newCareersPage = await CareersPage.createFromNewTab(newTab);
