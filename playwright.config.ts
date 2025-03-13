@@ -15,19 +15,24 @@ export default defineConfig({
       use: { 
         ...devices['Desktop Chrome'],
         headless: true,
+        launchOptions: {
+          args: ['--start-maximized'],
+        },
       },
     },
     {
       name: 'firefox',
       use: { 
         ...devices['Desktop Firefox'],
-        headless: true, //testing
+        headless: true, // testing
+        // Firefox doesn't support '--start-maximized', so we set the viewport to null
       },
     },
   ],
   use: {
     baseURL: 'https://www.softserveinc.com',
     trace: 'on-first-retry', // Capture trace on failures
-    headless: false, // Global headless mode set to false
+    headless: true, // Global headless mode set to false
+    viewport: null,  // Removes the default viewport size so that the window is maximized
   },
 });

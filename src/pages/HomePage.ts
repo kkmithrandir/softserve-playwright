@@ -31,9 +31,9 @@ export class HomePage {
     await this.page.waitForLoadState();
     await this.page.waitForTimeout(10000);
     try{
-    await this.cookieBanner.getByText('Let’s talk about cookies We').waitFor({state: 'visible', timeout: 5000});
+    await this.cookieBanner.locator('body > div.cky-consent-container.cky-box-bottom-left > div > div').waitFor({state: 'visible', timeout: 5000});
     await this.page.waitForTimeout(1000);
-    await this.cookieAcceptAllButton.getByRole('button', { name: 'Accept All' }).click({force: true});
+    await this.cookieAcceptAllButton.locator('body > div.cky-consent-container.cky-box-bottom-left > div > div > div > div.cky-notice-btn-wrapper > button.cky-btn.cky-btn-accept').click({force: true});
     } catch (error){
         console.log('Cookie dialog not found, continuing without accepting.')
     }
