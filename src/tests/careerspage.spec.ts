@@ -35,7 +35,9 @@ test.describe('Careers Page Tests', () => {
     await newCareersPage.careersSearch.click();
     await newCareersPage.careersSearch.fill('Middle Test Automation Engineer');
     await newCareersPage.careersSearch.press('Enter');
+    await newCareersPage.careersJobCount.scrollIntoViewIfNeeded();
     await newCareersPage.page.waitForTimeout(5000);
+    await newCareersPage.careersJobCount.scrollIntoViewIfNeeded();
     const newJobCountText = await newCareersPage.careersJobCount.textContent();
     console.log(`New job count: ${newJobCountText}`);
     expect(newJobCountText).not.toEqual(initialJobCountText);
