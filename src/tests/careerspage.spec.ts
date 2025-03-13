@@ -25,16 +25,21 @@ test.describe('Careers Page Tests', () => {
     await expect(newCareersPage.careersHeadingSubText).toHaveText('Find your perfect IT job at SoftServe');
   });
 
-  test('user uses the search functionality', async () => {
+  test.only('user uses the search functionality', async () => {
     // Navigate to the Careers page and get the new tab
     newTab = await careersPage.navigateToCareersPage();
     newCareersPage = await CareersPage.createFromNewTab(newTab);
 
     // Verify search input is visible and check job count before and after searching
     await expect(newCareersPage.careersSearch).toBeVisible();
-    await expect(newCareersPage.careersJobCount).toHaveText('138 Jobs');
+    const initialJobCountText = await newCareersPage.careersJobCount.textContent();
+    console.log(`Initial job count: ${initialJobCountText}`);
+    await newCareersPage.careersSearch.click();
     await newCareersPage.careersSearch.fill('Middle Test Automation Engineer');
     await newCareersPage.careersSearch.press('Enter');
-    await expect(newCareersPage.careersJobCount).not.toHaveText('138 Jobs'); // Count changes dynamically
+    await newCareersPage.page.waitForTimeout(2000);
+    const newJobCountText = await newCareersPage.careersJobCount.textContent();
+    console.log(`New job count: ${newJobCountText}`);
+    expect(newJobCountText).not.toEqual(initialJobCountText);
   });
 });

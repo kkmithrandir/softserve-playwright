@@ -31,8 +31,9 @@ export class HomePage {
     await this.page.waitForLoadState();
     await this.page.waitForTimeout(10000);
     try{
-    await this.cookieBanner.getByText('Let’s talk about cookies We').waitFor({state: 'visible', timeout: 3000});
-    await this.cookieAcceptAllButton.getByRole('button', { name: 'Accept All' }).click();
+    await this.cookieBanner.getByText('Let’s talk about cookies We').waitFor({state: 'visible', timeout: 5000});
+    await this.page.waitForTimeout(1000);
+    await this.cookieAcceptAllButton.getByRole('button', { name: 'Accept All' }).click({force: true});
     } catch (error){
         console.log('Cookie dialog not found, continuing without accepting.')
     }

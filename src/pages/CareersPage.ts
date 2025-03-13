@@ -34,7 +34,7 @@ export class CareersPage extends HomePage {
         this.page.context().waitForEvent('page'),
         this.careersButton.click({ timeout: 15000 })
       ]);
-      await newTab.waitForLoadState('networkidle');
+      await newTab.waitForTimeout(2000);
       console.log(`Opened new page: ${await newTab.title()}`);
 
       // Verify the new tab URL
@@ -55,8 +55,9 @@ export class CareersPage extends HomePage {
     try {
       const policy = page.locator('.cky-consent-bar');
       const policyAccept = page.getByRole('button', { name: 'Accept All' });
-      await policy.waitFor({ state: 'visible', timeout: 5000 });
-      await policyAccept.click();
+      await policy.waitFor({ state: 'visible', timeout: 7000 });
+      await page.waitForTimeout(1000);
+      await policyAccept.click({force: true});
       console.log('Accepted privacy policy');
     } catch (error) {
       console.log('Privacy policy modal did not appear, continuing regardless');
