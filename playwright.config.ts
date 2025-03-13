@@ -6,7 +6,7 @@ export default defineConfig({
   expect: {
     timeout: 8000, // Timeout for expect assertions (increased time for testing purposes)
   },
-  fullyParallel: false, // Run tests in parallel (for testing purposes)
+  fullyParallel: true, // Run tests in parallel (for testing purposes)
   retries: 2, // 2 added retries (flaky tests on Mozilla)
   reporter: [['html', { outputFolder: 'playwright-report', open: 'always' }]],
   projects: [
@@ -14,14 +14,14 @@ export default defineConfig({
       name: 'chromium',
       use: { 
         ...devices['Desktop Chrome'],
-        headless: false,
+        headless: true,
       },
     },
     {
       name: 'firefox',
       use: { 
         ...devices['Desktop Firefox'],
-        headless: false, //testing
+        headless: true, //testing
       },
     },
   ],
