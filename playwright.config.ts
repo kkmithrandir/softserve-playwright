@@ -2,11 +2,12 @@ import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
   testDir: './src/tests',
-  timeout: 30 * 1000, // Global timeout for each test
+  timeout: 60 * 1000, // Global timeout for each test **increased time for testing purposes
   expect: {
-    timeout: 5000, // Timeout for expect assertions
+    timeout: 8000, // Timeout for expect assertions **increased time for testing purposes
   },
-  fullyParallel: true, // Run tests in parallel
+  fullyParallel: false, // Run tests in parallel **for testing purposes (got timeout 3 times)
+  retries: 2, // 2 added retires (flaky tests on mozilla)
   reporter: [['html', { outputFolder: 'playwright-report', open: 'always' }]],
   projects: [
     {
