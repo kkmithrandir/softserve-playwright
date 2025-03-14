@@ -24,18 +24,14 @@ export class HomePage {
     this.openMenuButton  = page.getByRole('button', { name: 'Open menu' });
     this.menuNavigation  = page.getByText('HomeYour Digital')
     this.menuItems       = this.menuNavigation.locator('li');
+    this.cookieBanner    = page.locator('body > div.cky-consent-container.cky-box-bottom-left > div > div > div > div.cky-notice-btn-wrapper');
+    this.cookieAcceptAllButton = this.cookieBanner.locator('> button.cky-btn.cky-btn-accept');
   }
 
   async navigate() {
     await this.page.goto('https://www.softserveinc.com/');
     await this.page.waitForLoadState();
-    await this.page.waitForTimeout(10000);
-    try{
-    await this.cookieBanner.locator('body > div.cky-consent-container.cky-box-bottom-left > div > div > div > div.cky-notice-btn-wrapper').waitFor({state: 'visible', timeout: 5000});
-    await this.page.waitForTimeout(1000);
-    await this.cookieAcceptAllButton.locator('body > div.cky-consent-container.cky-box-bottom-left > div > div > div > div.cky-notice-btn-wrapper > button.cky-btn.cky-btn-accept').click({force: true});
-    } catch (error){
-        console.log('Cookie dialog not found, continuing without accepting.')
-    }
+    await this.cookieBanner.waitFor({timeout: 5000});
+    await this.cookieAcceptAllButton.click({force: true});
   }
 }

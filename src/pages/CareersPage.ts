@@ -1,4 +1,4 @@
-import { Page, Locator, expect } from '@playwright/test';
+import { Page, Locator, expect, test } from '@playwright/test';
 import { HomePage } from './HomePage';
 
 export class CareersPage extends HomePage {
@@ -20,48 +20,29 @@ export class CareersPage extends HomePage {
   }
 
   async navigateToCareersPage(): Promise<Page> {
-    try {
-      try {
-        await this.careersButton.waitFor({ state: 'visible', timeout: 10000 });
-      } catch (error) {
-        console.log('Refreshing page to bypass security...');
-        await this.page.reload();
-        await this.page.waitForLoadState('networkidle');
-        await this.careersButton.waitFor({ state: 'visible', timeout: 10000 });
-      }
-      // Click the careers button and wait for the new tab to open
-      const [newTab] = await Promise.all([
-        this.page.context().waitForEvent('page'),
-        this.careersButton.click({ timeout: 15000 })
-      ]);
-      await newTab.waitForTimeout(2000);
-      console.log(`Opened new page: ${await newTab.title()}`);
-
-      // Verify the new tab URL
-      const url = new URL(newTab.url());
-      expect(url.hostname).toBe('career.softserveinc.com');
-
-      // Handle the privacy policy modal if it appears
-      await this.handlePrivacyPolicy(newTab);
-      
-      return newTab;
-    } catch (error) {
-      console.error('Error navigating to careers page:', error);
-      throw error;
+    const context = this.page.context();
+    const newPagePromise = context.waitForEvent('page');
+    this.careersButton.click({ timeout: 2000 })
+    const newPage = await newPagePromise;  
+    let url = newPage.url();
+    
+    // Retry reload if URL still indicates a failed navigation
+    if (test.info().project.name === 'chromium') {
+         // Wait for the new page to finish loading
+        await newPage.waitForLoadState('networkidle');
+        newPage.url();
+        let attempts = 0;
+        while (url.includes("chromewebdata") && attempts < 3) {
+        await newPage.reload();
+        await newPage.waitForLoadState('networkidle');
+        url = newPage.url();
+        attempts++;
+        }
     }
-  }
-
-  private async handlePrivacyPolicy(page: Page): Promise<void> {
-    try {
-      const policy = page.locator('.cky-consent-bar');
-      const policyAccept = page.getByRole('button', { name: 'Accept All' });
-      await policy.waitFor({ state: 'visible', timeout: 7000 });
-      await page.waitForTimeout(1000);
-      await policyAccept.click({force: true});
-      console.log('Accepted privacy policy');
-    } catch (error) {
-      console.log('Privacy policy modal did not appear, continuing regardless');
-    }
+  
+    const hostname = new URL(url).hostname;
+    expect(hostname).toBe('career.softserveinc.com');
+    return newPage;
   }
   
   static async createFromNewTab(newTab: Page): Promise<CareersPage> {
