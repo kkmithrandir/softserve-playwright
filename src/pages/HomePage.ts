@@ -31,7 +31,7 @@ export class HomePage {
   async navigate() {
     await this.page.goto('https://www.softserveinc.com/');
     await this.page.waitForLoadState();
-    await this.cookieBanner.waitFor({timeout: 5000});
+    await this.cookieBanner.waitFor({timeout: 10000});
     await this.cookieAcceptAllButton.click({force: true});
   }
 }
