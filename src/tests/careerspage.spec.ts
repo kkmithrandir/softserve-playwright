@@ -18,7 +18,6 @@ test.describe('Careers Page Tests', () => {
   test('user navigates to Careers page and verifies content', async () => {
     // Navigate to the Careers page and get the new tab
     newTab = await careersPage.navigateToCareersPage();
-    console.log('newtab',newTab);
     newCareersPage = await CareersPage.createFromNewTab(newTab);
     await expect(newCareersPage.careersPointer).toHaveText(/Be\s+one\s*of\s+us/, { timeout: 10000 });
     await expect(newCareersPage.careersHeadingSubText).toHaveText('Find your perfect IT job at SoftServe');
